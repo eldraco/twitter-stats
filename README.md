@@ -6,6 +6,7 @@ This is a simple program to get information about any twitter account in your co
 Features so far
 ---------------
 - Obtain the names of the followers of a given twitter account name.
+- Works with Twitter API v1.1 (so far August 2014)
 
 
 Usage
