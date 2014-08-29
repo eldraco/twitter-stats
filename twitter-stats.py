@@ -22,6 +22,7 @@
 # Changelog
 
 # Description
+# A command line tool to get information about any twitter account.
 #
 # TODO
 
