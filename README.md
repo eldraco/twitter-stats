@@ -8,7 +8,9 @@ Features so far
 - Obtain the names of the followers of a given twitter account name.
 
 
-To use this program you MUST have the twitter credentials and put them in a file.
+Usage
+-----
+To use this program you MUST have your twitter credentials and put them in a file.
 
 Instructions are here also: https://dev.twitter.com/docs/auth/tokens-devtwittercom
 
@@ -31,9 +33,11 @@ Instructions are here also: https://dev.twitter.com/docs/auth/tokens-devtwitterc
 9- The acccess token secret in the web page goes into oauth.accessTokenSecret
 
 
-You have an empty file as example to fill. Once you put the 4 values, you can run the program like this:
+You have an empty file called credentials.txt as an example to fill. Once you put the 4 values, you can run the program like this:
 
 To get the followers of the user "test1234"
-./twitter-stats.py -n test1234 -f -a auth.txt 
+
+./twitter-stats.py -n test1234 -f -a credentials.txt
+
 
 You can store the output in an external file every day and then compare them with diff.
