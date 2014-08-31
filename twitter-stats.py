@@ -30,7 +30,10 @@
 # standard imports
 import getopt
 import sys
-import tweepy
+try:
+    import tweepy
+except ImportError:
+    print 'You need the tweepy libraries. apt-get install python-tweepy'
 import json
 #import time
 from datetime import datetime
@@ -205,13 +208,19 @@ class TwitterFunctions():
     def get_limits(self):
         global debug
         try:
+            if debug:
+                print 'Trying to get the twitter limits'
             self.limits = self.api.rate_limit_status()
             if debug > 4:
                 print 'Limits'
                 self.print_json(self.limits)
                 print
-        except:
-            print 'Unknown error while trying to get quota limits.'
+        except Exception as inst:          
+            print 'Problem in get_limits() in class TwitterFunctions'
+            print type(inst)     # the exception instance
+            print inst.args      # arguments stored in .args    
+            print inst           # __str__ allows args to printed directly
+            exit(-1)
             sys.exit(-1)
 
 
@@ -220,15 +229,31 @@ class TwitterFunctions():
         Get the api info
         """
         global debug
-        self.credentials = self.read_config_file()
-        auth = tweepy.OAuthHandler(self.credentials["consumer_key"], self.credentials["consumer_secret"])
-        auth.set_access_token(self.credentials["access_token"], self.credentials["access_token_secret"])
+        self.read_config_file()
+        try:
+            if debug:
+                print 'Getting the twitter OAuthHandler'
+            auth = tweepy.OAuthHandler(self.credentials["consumer_key"], self.credentials["consumer_secret"])
+            auth.set_access_token(self.credentials["access_token"], self.credentials["access_token_secret"])
+        except Exception as inst:          
+            print 'Problem in get_api() in class TwitterFunctions'
+            print type(inst)     # the exception instance
+            print inst.args      # arguments stored in .args    
+            print inst           # __str__ allows args to printed directly
+            exit(-1)
         try:
             # Makes use of a patch to tweepy which provides a default timeout value.
+            if debug:
+                print 'Getting the twitter API'
             api = tweepy.API(auth_handler=auth, timeout=10)
         except:
             # Makes use of standard tweepy.
+            if debug > 2:
+                print 'Don\'t know what happened' 
             api = tweepy.API(auth_handler=auth)
+
+        if debug> 2:
+            print '\tAPI obtained successfully'
         self.api = api
 
 
@@ -239,26 +264,27 @@ class TwitterFunctions():
         global debug
         try:
             if debug:
-                print 'Trying to open auth file {}'.format(self.auth_file)
+                print 'Using credentials in {}'.format(self.auth_file)
             fp = open(self.auth_file)
         except:
             if debug:
                 print 'Need to provide a valid auth file which contains access token, access token secret, consumer key and consumer secret.'
             sys.exit(-1)
 
-        credentials = {}
+        self.credentials = {}
         for line in fp:
             key,value = line.strip().split('=')
             if key=="oauth.accessToken":
-                credentials["access_token"] = value
+                self.credentials["access_token"] = value
             elif key=="oauth.accessTokenSecret":
-                credentials["access_token_secret"] = value
+                self.credentials["access_token_secret"] = value
             elif key=="oauth.consumerKey":
-                credentials["consumer_key"] = value
+                self.credentials["consumer_key"] = value
             elif key=="oauth.consumerSecret":
-                credentials["consumer_secret"] = value
-        assert len(credentials)==4, "Improper auth file."
-        return credentials
+                self.credentials["consumer_secret"] = value
+        assert len(self.credentials)==4, "Improper auth file."
+        if debug > 3:
+            print '\tRead credentials: {}'.format(self.credentials)
 
 
 
@@ -286,8 +312,11 @@ def main():
         try:
             if get_profile:
                 tf.get_profile()
-            if get_followers:
+            elif get_followers:
                 tf.get_followers()
+            else:
+                usage()
+                sys.exit(-1)
 
             sys.exit(1)
         except Exception, e:

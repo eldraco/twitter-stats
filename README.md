@@ -23,16 +23,19 @@ Instructions are here also: https://dev.twitter.com/docs/auth/tokens-devtwitterc
 
 4- Create a new app
 
-5- Generate the api keys
+5- Go to API keys menu
 
 6- What is called "API key" should be put in a file as oauth.consumerKey
 
 7- What is called "API key secret" should be put in a file as oauth.consumerKeySecret
 
-8- The acccess token in the web page goes into oauth.accessToken
+8- Push th button "Create access tokens".
 
-9- The acccess token secret in the web page goes into oauth.accessTokenSecret
+9- The acccess token in the web page goes into oauth.accessToken
 
+10- The acccess token secret in the web page goes into oauth.accessTokenSecret
+
+11- Be SURE of putting each token in the correct place.
 
 You have an empty file called credentials.txt as an example to fill. Once you put the 4 values, you can run the program like this:
 
